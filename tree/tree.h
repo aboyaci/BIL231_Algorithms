@@ -20,6 +20,8 @@ int tree_remove(tree*, int);
 int tree_traverse_ldr(tree_node*);
 int tree_traverse_dlr(tree_node*);
 int tree_traverse_lrd(tree_node*);
-
+int tree_successor(tree*, int);
+int tree_predecessor(tree*, int);
+int tree_depth(tree_node*);
 
 #endif /* __TREE_H__ */

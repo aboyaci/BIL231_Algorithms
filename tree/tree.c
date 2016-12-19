@@ -78,11 +78,12 @@ int tree_remove(tree* t, int data)
 {
 	tree_node **n = &(t->root);
 	tree_node *parent = NULL;
-
+/*
 	while(*n)
 	{
 		if 
 	}
+*/
 
 }
 
@@ -120,4 +121,28 @@ int tree_traverse_lrd(tree_node* n)
 	}
 
 	return 0;
+}
+
+int tree_successor(tree*, int)
+{
+
+}
+
+int tree_predecessor(tree*, int)
+{
+
+}
+int tree_depth(tree_node* n)
+{
+	int l,r;
+
+	if (!n)
+	{
+		return 0;
+	}
+
+	l = tree_depth(n->left);
+	r = tree_depth(n->right);
+
+	return l>r ? l+1: r+1;
 }
