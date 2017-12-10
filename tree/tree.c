@@ -19,6 +19,9 @@ int main()
 	tree_insert(&t, 2);
 	tree_insert(&t, 1);
 
+	tree_remove(t.root, 6);
+	tree_remove(t.root, 1);
+
 	printf("LDR: ");
 	tree_traverse_ldr(t.root);
 
@@ -27,6 +30,8 @@ int main()
 
 	printf("\nLRD: ");
 	tree_traverse_lrd(t.root);
+
+
 
 	printf("\n");
 
@@ -47,6 +52,7 @@ tree_node* allocate_node()
 	n->data = 0;
 	n->left = NULL;
 	n->right = NULL;
+	n->parent = NULL;
 
 	return n;
 }
@@ -54,9 +60,12 @@ tree_node* allocate_node()
 int tree_insert(tree* t, int data)
 {
 	tree_node **n = &(t->root);
+	tree_node *parent = NULL;
 
 	while(*n)
 	{
+		parent = *n;
+
 		if ((*n)->data > data)
 		{
 			n = &((*n)->left);
@@ -69,22 +78,39 @@ int tree_insert(tree* t, int data)
 
 	*n = allocate_node();
 	(*n)->data = data;
+	(*n)->parent = parent;
 
 	return 0;
-
 }
 
-int tree_remove(tree* t, int data)
+int tree_remove(tree_node* root, int key)
 {
-	tree_node **n = &(t->root);
-	tree_node *parent = NULL;
-/*
-	while(*n)
-	{
-		if 
-	}
-*/
+	tree_node *n = tree_find(root, key);
+	tree_node *successor = NULL;
 
+	if (n != NULL)
+	{
+		if (n->left == NULL) /* one child or leaf */
+		{
+			n->parent->left = n->right;
+			free(n);
+		}
+		else if (n->right == NULL) /* one child or leaf */
+		{
+			n->parent->right = n->left;
+			free(n);
+		}
+		else /* two child */
+		{
+			successor = tree_successor(n);
+
+      		n->data = successor->data;
+
+      		tree_remove(n->right, n->data);
+		}
+	}
+
+	return 0;
 }
 
 int tree_traverse_ldr(tree_node* n)
@@ -123,14 +149,45 @@ int tree_traverse_lrd(tree_node* n)
 	return 0;
 }
 
-int tree_successor(tree*, int)
+tree_node* tree_find(tree_node *root, int key)
 {
+	while(root != NULL)
+	{
+		if(root->data == key)
+			break;
+		else if (root->data > key)
+			root = root->left;
+		else 
+			root = root->right;
+	}
 
+	return root;
 }
 
-int tree_predecessor(tree*, int)
+tree_node* tree_successor(tree_node* root)
 {
+	/* min of right subtree */
+	tree_node *n = root->right;
 
+	while(n != NULL && n->left != NULL)
+	{
+		n = n->left;
+	}
+
+	return n;
+}
+
+tree_node* tree_predecessor(tree_node* root)
+{
+	/* max of left subtree */
+	tree_node *n = root->left;
+
+	while(n != NULL && n->right != NULL)
+	{
+		n = n->right;
+	}
+
+	return n;
 }
 int tree_depth(tree_node* n)
 {
