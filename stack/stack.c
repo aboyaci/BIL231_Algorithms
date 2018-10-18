@@ -27,7 +27,7 @@ int initilize(stack* s)
 
 int push(stack* s, int i)
 {
-	if(s->top <= s->max)
+	if(s->top < s->max)
 	{
 		s->data[s->top++] = i;
 		
@@ -41,7 +41,7 @@ int pop(stack* s)
 {
 	if(s->top > 0)
 	{
-		return s->data[s->top--];
+		return s->data[--(s->top)];
 	}
 	
 }
