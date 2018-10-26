@@ -79,7 +79,7 @@ int map_put(hash_map* m, char* key, void* data)
 		n = m->items[key_hash];
 	
 		/* go to the end of list */
-		while(!n->next)
+		while(n->next!=NULL)
 		{
 			/* check for existing key */
 			if(strcmp(n->key, key) == 0)
@@ -92,7 +92,14 @@ int map_put(hash_map* m, char* key, void* data)
 			}
 			n = n->next;
 		}
+		if(strcmp(n->key, key) == 0)
+			{
+				n->data = data;
+				free(new_node->key);
+				free(new_node);
 
+				return 0;
+			}
 		n->next = new_node;
 	}
 	else
